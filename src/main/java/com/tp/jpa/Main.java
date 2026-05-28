@@ -26,6 +26,9 @@ public class Main {
         System.out.println("    SISTEMA DE GESTION - FoodStore JPA      ");
         System.out.println("============================================");
 
+        // Semillar datos demo si la base de datos está vacía
+        seedDataIfEmpty();
+
         boolean ejecutando = true;
         while (ejecutando) {
             mostrarMenuPrincipal();
@@ -391,12 +394,14 @@ public class Main {
         while (!volver) {
             System.out.println("\n----------------- REPORTES -----------------");
             System.out.println("  1. Productos por categoria (JPQL)");
+            System.out.println("  2. Inicializar / Reestablecer datos de prueba");
             System.out.println("  0. Volver al menu principal");
             System.out.println("--------------------------------------------");
 
             int opcion = leerEntero("Selecciona una opcion: ");
             switch (opcion) {
                 case 1 -> reporteProductosPorCategoria();
+                case 2 -> reestablecerDatosDemo();
                 case 0 -> volver = true;
                 default -> System.out.println("[!] Opcion invalida.");
             }
@@ -507,6 +512,155 @@ public class Main {
     /** Trunca un texto al largo máximo indicado para mostrar en tablas. */
     private static String truncar(String texto, int max) {
         if (texto == null) return "";
-        return texto.length() > max ? texto.substring(0, max - 1) + "…" : texto;
+        return texto.length() > max ? texto.substring(0, max - 1) + "..." : texto;
+    }
+
+    // =========================================================
+    // SEMILLADO DE DATOS DEMOSTRACION
+    // =========================================================
+
+    private static void seedDataIfEmpty() {
+        if (categoriaRepo.listarActivos().isEmpty()) {
+            semillarBaseDatos();
+        }
+    }
+
+    private static void reestablecerDatosDemo() {
+        System.out.println("\n--- REESTABLECER BASE DE DATOS ---");
+        System.out.print("¿Estas seguro de borrar todos los datos actuales y semillar los datos demo? (S/N): ");
+        String confirmacion = scanner.nextLine().trim().toUpperCase();
+        if (confirmacion.equals("S")) {
+            System.out.println("Limpiando tablas de la base de datos...");
+            limpiarBaseDatos();
+            System.out.println("Semillando categorias y productos demo...");
+            semillarBaseDatos();
+            System.out.println("[V] Base de datos reestablecida con exito.");
+        } else {
+            System.out.println("Operacion cancelada.");
+        }
+    }
+
+    private static void limpiarBaseDatos() {
+        jakarta.persistence.EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+        try {
+            em.getTransaction().begin();
+            em.createQuery("DELETE FROM DetallePedido").executeUpdate();
+            em.createQuery("DELETE FROM Pedido").executeUpdate();
+            em.createQuery("DELETE FROM Usuario").executeUpdate();
+            em.createQuery("DELETE FROM Producto").executeUpdate();
+            em.createQuery("DELETE FROM Categoria").executeUpdate();
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
+            System.out.println("[X] Error al limpiar la base de datos: " + e.getMessage());
+        } finally {
+            em.close();
+        }
+    }
+
+    private static void semillarBaseDatos() {
+        try {
+            // Seed Categories
+            Categoria cat1 = new Categoria();
+            cat1.setNombre("Electronica");
+            cat1.setDescripcion("Dispositivos electronicos y gadgets");
+            categoriaRepo.guardar(cat1);
+
+            Categoria cat2 = new Categoria();
+            cat2.setNombre("Ropa");
+            cat2.setDescripcion("Prendas de vestir e indumentaria");
+            categoriaRepo.guardar(cat2);
+
+            Categoria cat3 = new Categoria();
+            cat3.setNombre("Alimentos");
+            cat3.setDescripcion("Comida, snacks y bebidas");
+            categoriaRepo.guardar(cat3);
+
+            Categoria cat4 = new Categoria();
+            cat4.setNombre("Hogar");
+            cat4.setDescripcion("Articulos y decoracion para el hogar");
+            categoriaRepo.guardar(cat4);
+
+            // Seed Products
+            // Electronica
+            Producto p1 = new Producto();
+            p1.setNombre("Laptop Gamer");
+            p1.setPrecio(1399.99);
+            p1.setDescripcion("Laptop para juegos de alta gama");
+            p1.setStock(8);
+            p1.setCategoria(cat1);
+            p1.setDisponible(true);
+            productoRepo.guardar(p1);
+
+            Producto p2 = new Producto();
+            p2.setNombre("Smartphone Pro");
+            p2.setPrecio(999.00);
+            p2.setDescripcion("Telefono inteligente de ultima generacion");
+            p2.setStock(15);
+            p2.setCategoria(cat1);
+            p2.setDisponible(true);
+            productoRepo.guardar(p2);
+
+            // Ropa
+            Producto p3 = new Producto();
+            p3.setNombre("Remera de Algodon");
+            p3.setPrecio(25.50);
+            p3.setDescripcion("Remera clasica 100% algodon");
+            p3.setStock(50);
+            p3.setCategoria(cat2);
+            p3.setDisponible(true);
+            productoRepo.guardar(p3);
+
+            Producto p4 = new Producto();
+            p4.setNombre("Pantalon Jean");
+            p4.setPrecio(59.90);
+            p4.setDescripcion("Jean azul de calce recto");
+            p4.setStock(30);
+            p4.setCategoria(cat2);
+            p4.setDisponible(true);
+            productoRepo.guardar(p4);
+
+            // Alimentos
+            Producto p5 = new Producto();
+            p5.setNombre("Cafe de Especialidad");
+            p5.setPrecio(12.00);
+            p5.setDescripcion("Cafe en grano tostado natural 250g");
+            p5.setStock(20);
+            p5.setCategoria(cat3);
+            p5.setDisponible(true);
+            productoRepo.guardar(p5);
+
+            Producto p6 = new Producto();
+            p6.setNombre("Chocolate Negro 70%");
+            p6.setPrecio(4.50);
+            p6.setDescripcion("Tableta de chocolate amargo 100g");
+            p6.setStock(40);
+            p6.setCategoria(cat3);
+            p6.setDisponible(true);
+            productoRepo.guardar(p6);
+
+            // Hogar
+            Producto p7 = new Producto();
+            p7.setNombre("Lampara Escritorio LED");
+            p7.setPrecio(35.00);
+            p7.setDescripcion("Lampara con puerto USB y brillo regulable");
+            p7.setStock(12);
+            p7.setCategoria(cat4);
+            p7.setDisponible(true);
+            productoRepo.guardar(p7);
+
+            Producto p8 = new Producto();
+            p8.setNombre("Aspiradora Robot");
+            p8.setPrecio(249.99);
+            p8.setDescripcion("Aspiradora inteligente con conexion wifi");
+            p8.setStock(5);
+            p8.setCategoria(cat4);
+            p8.setDisponible(true);
+            productoRepo.guardar(p8);
+        } catch (Exception e) {
+            System.out.println("[X] Error al semillar la base de datos: " + e.getMessage());
+        }
     }
 }
