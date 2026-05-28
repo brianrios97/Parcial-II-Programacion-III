@@ -273,7 +273,7 @@ public class Main {
         nuevo.setDisponible(true);
 
         Producto guardado = productoRepo.guardar(nuevo);
-        System.out.println("[V] Producto '" + guardado.getNombre() + "' creado con ID: " + guardado.getId() + " y categoria asignada: '" + guardado.getCategoria().getNombre() + "'.");
+        System.out.println("[V] Producto '" + guardado.getNombre() + "' creado con ID: " + guardado.getId() + " y categoria asignada: '" + optCat.get().getNombre() + "'.");
     }
 
     /**

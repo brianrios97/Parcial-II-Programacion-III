@@ -4,6 +4,7 @@ import com.tp.jpa.model.Producto;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repositorio concreto para la entidad Producto.
@@ -21,12 +22,41 @@ public class ProductoRepository extends BaseRepository<Producto> {
     }
 
     /**
+     * Retorna la lista de productos activos cargando la categoria de forma ansiosa (Eager)
+     * para evitar LazyInitializationException en la vista/consola.
+     */
+    @Override
+    public List<Producto> listarActivos() {
+        EntityManager em = emf.createEntityManager();
+        try {
+            String jpql = "SELECT p FROM Producto p LEFT JOIN FETCH p.categoria WHERE p.eliminado = false";
+            return em.createQuery(jpql, Producto.class).getResultList();
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
+     * Busca un producto por ID cargando la categoria de forma ansiosa (Eager)
+     * para evitar LazyInitializationException.
+     */
+    @Override
+    public Optional<Producto> buscarPorId(Long id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            String jpql = "SELECT p FROM Producto p LEFT JOIN FETCH p.categoria WHERE p.id = :id";
+            List<Producto> resultados = em.createQuery(jpql, Producto.class)
+                    .setParameter("id", id)
+                    .getResultList();
+            return resultados.isEmpty() ? Optional.empty() : Optional.of(resultados.get(0));
+        } finally {
+            em.close();
+        }
+    }
+
+    /**
      * Busca todos los productos activos (no eliminados) que pertenecen a una categoria especifica.
-     *
-     * <p><strong>Consulta JPQL:</strong> Navega desde el objeto Producto a traves de la
-     * relacion @ManyToOne hasta el ID de su Categoria usando la notacion de punto (p.categoria.id).
-     * El parametro nombrado:categoriaId evita SQL injection y mejora la legibilidad.
-     * TypedQuery&lt;Producto&gt; garantiza type-safety sin necesidad de casteos manuales.</p>
+     * Carga la categoria de forma ansiosa (Eager).
      *
      * @param categoriaId El ID de la categoria por la cual filtrar
      * @return Lista de productos activos pertenecientes a la categoria indicada (puede ser vacia)
@@ -34,8 +64,8 @@ public class ProductoRepository extends BaseRepository<Producto> {
     public List<Producto> buscarPorCategoria(Long categoriaId) {
         EntityManager em = emf.createEntityManager();
         try {
-            // JPQL: Filtra productos activos de la categoria dada usando parametro nombrado :categoriaId
             String jpql = "SELECT p FROM Producto p " +
+                          "LEFT JOIN FETCH p.categoria " +
                           "WHERE p.categoria.id = :categoriaId " +
                           "AND p.eliminado = false";
 
