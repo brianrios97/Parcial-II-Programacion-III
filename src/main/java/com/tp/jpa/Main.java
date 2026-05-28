@@ -22,23 +22,23 @@ public class Main {
     private static final Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        System.out.println("╔══════════════════════════════════════════╗");
-        System.out.println("║   SISTEMA DE GESTIÓN — FoodStore JPA     ║");
-        System.out.println("╚══════════════════════════════════════════╝");
+        System.out.println("============================================");
+        System.out.println("    SISTEMA DE GESTION - FoodStore JPA      ");
+        System.out.println("============================================");
 
         boolean ejecutando = true;
         while (ejecutando) {
             mostrarMenuPrincipal();
-            int opcion = leerEntero("Seleccioná una opción: ");
+            int opcion = leerEntero("Selecciona una opcion: ");
             switch (opcion) {
                 case 1 -> menuCategorias();
                 case 2 -> menuProductos();
                 case 3 -> menuReportes();
                 case 0 -> {
                     ejecutando = false;
-                    System.out.println("\n¡Hasta luego!");
+                    System.out.println("\nHasta luego!");
                 }
-                default -> System.out.println("⚠ Opción inválida. Intentá de nuevo.");
+                default -> System.out.println("[!] Opcion invalida. Intenta de nuevo.");
             }
         }
 
@@ -52,12 +52,12 @@ public class Main {
     // =========================================================
 
     private static void mostrarMenuPrincipal() {
-        System.out.println("\n══════════════ MENÚ PRINCIPAL ══════════════");
-        System.out.println("  1. Categorías");
+        System.out.println("\n============== MENU PRINCIPAL ==============");
+        System.out.println("  1. Categorias");
         System.out.println("  2. Productos");
         System.out.println("  3. Reportes");
         System.out.println("  0. Salir");
-        System.out.println("════════════════════════════════════════════");
+        System.out.println("============================================");
     }
 
     // =========================================================
@@ -67,22 +67,22 @@ public class Main {
     private static void menuCategorias() {
         boolean volver = false;
         while (!volver) {
-            System.out.println("\n────────── GESTIÓN DE CATEGORÍAS ──────────");
-            System.out.println("  1. Alta de categoría");
-            System.out.println("  2. Baja lógica de categoría");
-            System.out.println("  3. Modificación de categoría");
-            System.out.println("  4. Listado de categorías activas");
-            System.out.println("  0. Volver al menú principal");
-            System.out.println("───────────────────────────────────────────");
+            System.out.println("\n----------- GESTION DE CATEGORIAS -----------");
+            System.out.println("  1. Alta de categoria");
+            System.out.println("  2. Baja logica de categoria");
+            System.out.println("  3. Modificacion de categoria");
+            System.out.println("  4. Listado de categorias activas");
+            System.out.println("  0. Volver al menu principal");
+            System.out.println("---------------------------------------------");
 
-            int opcion = leerEntero("Seleccioná una opción: ");
+            int opcion = leerEntero("Selecciona una opcion: ");
             switch (opcion) {
                 case 1 -> altaCategoria();
                 case 2 -> bajaCategoria();
                 case 3 -> modificarCategoria();
                 case 4 -> listarCategorias();
                 case 0 -> volver = true;
-                default -> System.out.println("⚠ Opción inválida.");
+                default -> System.out.println("[!] Opcion invalida.");
             }
         }
     }
@@ -92,10 +92,10 @@ public class Main {
      * Solicita nombre (obligatorio) y descripción, persiste y muestra el ID generado.
      */
     private static void altaCategoria() {
-        System.out.println("\n--- ALTA DE CATEGORÍA ---");
+        System.out.println("\n--- ALTA DE CATEGORIA ---");
 
-        String nombre = leerTextoObligatorio("Nombre de la categoría: ");
-        System.out.print("Descripción (opcional, Enter para omitir): ");
+        String nombre = leerTextoObligatorio("Nombre de la categoria: ");
+        System.out.print("Descripcion (opcional, Enter para omitir): ");
         String descripcion = scanner.nextLine().trim();
 
         Categoria nueva = new Categoria();
@@ -103,7 +103,7 @@ public class Main {
         nueva.setDescripcion(descripcion.isEmpty() ? null : descripcion);
 
         Categoria guardada = categoriaRepo.guardar(nueva);
-        System.out.println("✔ Categoría creada con ID: " + guardada.getId());
+        System.out.println("[V] Categoria creada con ID: " + guardada.getId());
     }
 
     /**
@@ -111,16 +111,16 @@ public class Main {
      * Solicita el ID y marca eliminado = true. Muestra error si no existe.
      */
     private static void bajaCategoria() {
-        System.out.println("\n--- BAJA LÓGICA DE CATEGORÍA ---");
+        System.out.println("\n--- BAJA LOGICA DE CATEGORIA ---");
         listarCategorias();
 
-        long id = leerLong("Ingresá el ID de la categoría a eliminar: ");
+        long id = leerLong("Ingresa el ID de la categoria a eliminar: ");
         boolean eliminado = categoriaRepo.eliminarLogico(id);
 
         if (eliminado) {
-            System.out.println("✔ Categoría ID " + id + " dada de baja correctamente.");
+            System.out.println("[V] Categoria ID " + id + " dada de baja correctamente.");
         } else {
-            System.out.println("✘ Error: no existe una categoría activa con ID " + id + ".");
+            System.out.println("[X] Error: no existe una categoria activa con ID " + id + ".");
         }
     }
 
@@ -130,21 +130,21 @@ public class Main {
      * Si el campo queda vacío, conserva el valor anterior.
      */
     private static void modificarCategoria() {
-        System.out.println("\n--- MODIFICACIÓN DE CATEGORÍA ---");
+        System.out.println("\n--- MODIFICACION DE CATEGORIA ---");
         listarCategorias();
 
-        long id = leerLong("Ingresá el ID de la categoría a modificar: ");
+        long id = leerLong("Ingresa el ID de la categoria a modificar: ");
         Optional<Categoria> opt = categoriaRepo.buscarPorId(id);
 
         if (opt.isEmpty() || opt.get().isEliminado()) {
-            System.out.println("✘ Error: no existe una categoría activa con ID " + id + ".");
+            System.out.println("[X] Error: no existe una categoria activa con ID " + id + ".");
             return;
         }
 
         Categoria categoria = opt.get();
         System.out.println("Valores actuales:");
         System.out.println("  Nombre     : " + categoria.getNombre());
-        System.out.println("  Descripción: " + (categoria.getDescripcion() != null ? categoria.getDescripcion() : "(vacía)"));
+        System.out.println("  Descripcion: " + (categoria.getDescripcion() != null ? categoria.getDescripcion() : "(vacia)"));
 
         System.out.print("Nuevo nombre (Enter para conservar '" + categoria.getNombre() + "'): ");
         String nuevoNombre = scanner.nextLine().trim();
@@ -152,14 +152,14 @@ public class Main {
             categoria.setNombre(nuevoNombre);
         }
 
-        System.out.print("Nueva descripción (Enter para conservar): ");
+        System.out.print("Nueva descripcion (Enter para conservar): ");
         String nuevaDesc = scanner.nextLine().trim();
         if (!nuevaDesc.isEmpty()) {
             categoria.setDescripcion(nuevaDesc);
         }
 
         categoriaRepo.guardar(categoria);
-        System.out.println("✔ Categoría ID " + id + " actualizada correctamente.");
+        System.out.println("[V] Categoria ID " + id + " actualizada correctamente.");
     }
 
     /**
@@ -168,19 +168,19 @@ public class Main {
     private static void listarCategorias() {
         List<Categoria> categorias = categoriaRepo.listarActivos();
         if (categorias.isEmpty()) {
-            System.out.println("  (No hay categorías activas registradas)");
+            System.out.println("  (No hay categorias activas registradas)");
             return;
         }
-        System.out.println("\n┌──────┬──────────────────────────┬─────────────────────────────────┐");
-        System.out.printf( "│ %-4s │ %-24s │ %-31s │%n", "ID", "Nombre", "Descripción");
-        System.out.println("├──────┼──────────────────────────┼─────────────────────────────────┤");
+        System.out.println("\n+------+--------------------------+---------------------------------+");
+        System.out.printf( "| %-4s | %-24s | %-31s |%n", "ID", "Nombre", "Descripcion");
+        System.out.println("+------+--------------------------+---------------------------------+");
         for (Categoria c : categorias) {
-            System.out.printf("│ %-4d │ %-24s │ %-31s │%n",
+            System.out.printf("| %-4d | %-24s | %-31s |%n",
                     c.getId(),
                     truncar(c.getNombre(), 24),
                     truncar(c.getDescripcion() != null ? c.getDescripcion() : "", 31));
         }
-        System.out.println("└──────┴──────────────────────────┴─────────────────────────────────┘");
+        System.out.println("+------+--------------------------+---------------------------------+");
     }
 
     // =========================================================
@@ -190,22 +190,22 @@ public class Main {
     private static void menuProductos() {
         boolean volver = false;
         while (!volver) {
-            System.out.println("\n─────────── GESTIÓN DE PRODUCTOS ───────────");
+            System.out.println("\n------------ GESTION DE PRODUCTOS ------------");
             System.out.println("  1. Alta de producto");
-            System.out.println("  2. Baja lógica de producto");
-            System.out.println("  3. Modificación de producto");
+            System.out.println("  2. Baja logica de producto");
+            System.out.println("  3. Modificacion de producto");
             System.out.println("  4. Listado de productos activos");
-            System.out.println("  0. Volver al menú principal");
-            System.out.println("────────────────────────────────────────────");
+            System.out.println("  0. Volver al menu principal");
+            System.out.println("----------------------------------------------");
 
-            int opcion = leerEntero("Seleccioná una opción: ");
+            int opcion = leerEntero("Selecciona una opcion: ");
             switch (opcion) {
                 case 1 -> altaProducto();
                 case 2 -> bajaProducto();
                 case 3 -> modificarProducto();
                 case 4 -> listarProductos();
                 case 0 -> volver = true;
-                default -> System.out.println("⚠ Opción inválida.");
+                default -> System.out.println("[!] Opcion invalida.");
             }
         }
     }
@@ -221,18 +221,18 @@ public class Main {
         // Listar categorías disponibles para selección
         List<Categoria> categorias = categoriaRepo.listarActivos();
         if (categorias.isEmpty()) {
-            System.out.println("✘ No hay categorías activas. Creá una categoría primero.");
+            System.out.println("[X] No hay categorias activas. Crea una categoria primero.");
             return;
         }
         listarCategorias();
 
-        long catId = leerLong("Seleccioná el ID de la categoría: ");
+        long catId = leerLong("Selecciona el ID de la categoria: ");
         Optional<Categoria> optCat = categorias.stream()
                 .filter(c -> c.getId().equals(catId))
                 .findFirst();
 
         if (optCat.isEmpty()) {
-            System.out.println("✘ Error: no existe una categoría activa con ID " + catId + ".");
+            System.out.println("[X] Error: no existe una categoria activa con ID " + catId + ".");
             return;
         }
 
@@ -240,17 +240,17 @@ public class Main {
 
         double precio = -1;
         while (precio < 0) {
-            precio = leerDouble("Precio (número positivo): ");
-            if (precio < 0) System.out.println("⚠ El precio debe ser un número positivo.");
+            precio = leerDouble("Precio (numero positivo): ");
+            if (precio < 0) System.out.println("[!] El precio debe ser un numero positivo.");
         }
 
-        System.out.print("Descripción (opcional, Enter para omitir): ");
+        System.out.print("Descripcion (opcional, Enter para omitir): ");
         String descripcion = scanner.nextLine().trim();
 
         int stock = -1;
         while (stock < 0) {
-            stock = leerEntero("Stock (número >= 0): ");
-            if (stock < 0) System.out.println("⚠ El stock no puede ser negativo.");
+            stock = leerEntero("Stock (numero >= 0): ");
+            if (stock < 0) System.out.println("[!] El stock no puede ser negativo.");
         }
 
         Producto nuevo = new Producto();
@@ -262,7 +262,7 @@ public class Main {
         nuevo.setDisponible(true);
 
         Producto guardado = productoRepo.guardar(nuevo);
-        System.out.println("✔ Producto '" + guardado.getNombre() + "' creado con ID: " + guardado.getId());
+        System.out.println("[V] Producto '" + guardado.getNombre() + "' creado con ID: " + guardado.getId());
     }
 
     /**
@@ -270,24 +270,24 @@ public class Main {
      * Solicita el ID. Si no existe o ya está dado de baja, muestra error con nombre si aplica.
      */
     private static void bajaProducto() {
-        System.out.println("\n--- BAJA LÓGICA DE PRODUCTO ---");
+        System.out.println("\n--- BAJA LOGICA DE PRODUCTO ---");
         listarProductos();
 
-        long id = leerLong("Ingresá el ID del producto a eliminar: ");
+        long id = leerLong("Ingresa el ID del producto a eliminar: ");
         Optional<Producto> opt = productoRepo.buscarPorId(id);
 
         if (opt.isEmpty()) {
-            System.out.println("✘ Error: no existe ningún producto con ID " + id + ".");
+            System.out.println("[X] Error: no existe ningun producto con ID " + id + ".");
             return;
         }
         if (opt.get().isEliminado()) {
-            System.out.println("✘ Error: el producto '" + opt.get().getNombre() + "' ya está dado de baja.");
+            System.out.println("[X] Error: el producto '" + opt.get().getNombre() + "' ya esta dado de baja.");
             return;
         }
 
         boolean eliminado = productoRepo.eliminarLogico(id);
         if (eliminado) {
-            System.out.println("✔ Producto '" + opt.get().getNombre() + "' (ID " + id + ") dado de baja correctamente.");
+            System.out.println("[V] Producto '" + opt.get().getNombre() + "' (ID " + id + ") dado de baja correctamente.");
         }
     }
 
@@ -297,14 +297,14 @@ public class Main {
      * Campo vacío conserva el valor anterior.
      */
     private static void modificarProducto() {
-        System.out.println("\n--- MODIFICACIÓN DE PRODUCTO ---");
+        System.out.println("\n--- MODIFICACION DE PRODUCTO ---");
         listarProductos();
 
-        long id = leerLong("Ingresá el ID del producto a modificar: ");
+        long id = leerLong("Ingresa el ID del producto a modificar: ");
         Optional<Producto> opt = productoRepo.buscarPorId(id);
 
         if (opt.isEmpty() || opt.get().isEliminado()) {
-            System.out.println("✘ Error: no existe un producto activo con ID " + id + ".");
+            System.out.println("[X] Error: no existe un producto activo con ID " + id + ".");
             return;
         }
 
@@ -328,12 +328,12 @@ public class Main {
             try {
                 double nuevoPrecio = Double.parseDouble(precioStr);
                 if (nuevoPrecio < 0) {
-                    System.out.println("⚠ Precio inválido, se conserva el valor anterior.");
+                    System.out.println("[!] Precio invalido, se conserva el valor anterior.");
                 } else {
                     producto.setPrecio(nuevoPrecio);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Valor no numérico, se conserva el precio anterior.");
+                System.out.println("[!] Valor no numerico, se conserva el precio anterior.");
             }
         }
 
@@ -344,17 +344,17 @@ public class Main {
             try {
                 int nuevoStock = Integer.parseInt(stockStr);
                 if (nuevoStock < 0) {
-                    System.out.println("⚠ Stock inválido, se conserva el valor anterior.");
+                    System.out.println("[!] Stock invalido, se conserva el valor anterior.");
                 } else {
                     producto.setStock(nuevoStock);
                 }
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Valor no numérico, se conserva el stock anterior.");
+                System.out.println("[!] Valor no numerico, se conserva el stock anterior.");
             }
         }
 
         productoRepo.guardar(producto);
-        System.out.println("✔ Producto ID " + id + " actualizado correctamente.");
+        System.out.println("[V] Producto ID " + id + " actualizado correctamente.");
     }
 
     /**
@@ -366,20 +366,20 @@ public class Main {
             System.out.println("  (No hay productos activos registrados)");
             return;
         }
-        System.out.println("\n┌──────┬──────────────────────┬──────────┬───────┬──────────────────────┐");
-        System.out.printf( "│ %-4s │ %-20s │ %-8s │ %-5s │ %-20s │%n",
-                "ID", "Nombre", "Precio", "Stock", "Categoría");
-        System.out.println("├──────┼──────────────────────┼──────────┼───────┼──────────────────────┤");
+        System.out.println("\n+------+----------------------+----------+-------+----------------------+");
+        System.out.printf( "| %-4s | %-20s | %-8s | %-5s | %-20s |%n",
+                "ID", "Nombre", "Precio", "Stock", "Categoria");
+        System.out.println("+------+----------------------+----------+-------+----------------------+");
         for (Producto p : productos) {
-            String nombreCat = (p.getCategoria() != null) ? p.getCategoria().getNombre() : "(sin categoría)";
-            System.out.printf("│ %-4d │ %-20s │ $%-7.2f │ %-5d │ %-20s │%n",
+            String nombreCat = (p.getCategoria() != null) ? p.getCategoria().getNombre() : "(sin categoria)";
+            System.out.printf("| %-4d | %-20s | $%-7.2f | %-5d | %-20s |%n",
                     p.getId(),
                     truncar(p.getNombre(), 20),
                     p.getPrecio(),
                     p.getStock(),
                     truncar(nombreCat, 20));
         }
-        System.out.println("└──────┴──────────────────────┴──────────┴───────┴──────────────────────┘");
+        System.out.println("+------+----------------------+----------+-------+----------------------+");
     }
 
     // =========================================================
@@ -389,16 +389,16 @@ public class Main {
     private static void menuReportes() {
         boolean volver = false;
         while (!volver) {
-            System.out.println("\n──────────────── REPORTES ────────────────");
-            System.out.println("  1. Productos por categoría (JPQL)");
-            System.out.println("  0. Volver al menú principal");
-            System.out.println("──────────────────────────────────────────");
+            System.out.println("\n----------------- REPORTES -----------------");
+            System.out.println("  1. Productos por categoria (JPQL)");
+            System.out.println("  0. Volver al menu principal");
+            System.out.println("--------------------------------------------");
 
-            int opcion = leerEntero("Seleccioná una opción: ");
+            int opcion = leerEntero("Selecciona una opcion: ");
             switch (opcion) {
                 case 1 -> reporteProductosPorCategoria();
                 case 0 -> volver = true;
-                default -> System.out.println("⚠ Opción inválida.");
+                default -> System.out.println("[!] Opcion invalida.");
             }
         }
     }
@@ -409,47 +409,47 @@ public class Main {
      * y muestra los productos activos de esa categoría.
      */
     private static void reporteProductosPorCategoria() {
-        System.out.println("\n--- REPORTE: PRODUCTOS POR CATEGORÍA ---");
+        System.out.println("\n--- REPORTE: PRODUCTOS POR CATEGORIA ---");
 
         List<Categoria> categorias = categoriaRepo.listarActivos();
         if (categorias.isEmpty()) {
-            System.out.println("✘ No hay categorías activas disponibles.");
+            System.out.println("[X] No hay categorias activas disponibles.");
             return;
         }
 
         listarCategorias();
-        long catId = leerLong("Seleccioná el ID de la categoría: ");
+        long catId = leerLong("Selecciona el ID de la categoria: ");
 
         Optional<Categoria> optCat = categorias.stream()
                 .filter(c -> c.getId().equals(catId))
                 .findFirst();
 
         if (optCat.isEmpty()) {
-            System.out.println("✘ Error: no existe una categoría activa con ID " + catId + ".");
+            System.out.println("[X] Error: no existe una categoria activa con ID " + catId + ".");
             return;
         }
 
         // Llamada al método JPQL en ProductoRepository
         List<Producto> productos = productoRepo.buscarPorCategoria(catId);
 
-        System.out.println("\nProductos activos en categoría '" + optCat.get().getNombre() + "':");
+        System.out.println("\nProductos activos en categoria '" + optCat.get().getNombre() + "':");
 
         if (productos.isEmpty()) {
-            System.out.println("  (No hay productos activos en esta categoría)");
+            System.out.println("  (No hay productos activos en esta categoria)");
             return;
         }
 
-        System.out.println("┌──────┬──────────────────────┬──────────┬───────┐");
-        System.out.printf( "│ %-4s │ %-20s │ %-8s │ %-5s │%n", "ID", "Nombre", "Precio", "Stock");
-        System.out.println("├──────┼──────────────────────┼──────────┼───────┤");
+        System.out.println("+------+----------------------+----------+-------+");
+        System.out.printf( "| %-4s | %-20s | %-8s | %-5s |%n", "ID", "Nombre", "Precio", "Stock");
+        System.out.println("+------+----------------------+----------+-------+");
         for (Producto p : productos) {
-            System.out.printf("│ %-4d │ %-20s │ $%-7.2f │ %-5d │%n",
+            System.out.printf("| %-4d | %-20s | $%-7.2f | %-5d |%n",
                     p.getId(),
                     truncar(p.getNombre(), 20),
                     p.getPrecio(),
                     p.getStock());
         }
-        System.out.println("└──────┴──────────────────────┴──────────┴───────┘");
+        System.out.println("+------+----------------------+----------+-------+");
     }
 
     // =========================================================
@@ -463,7 +463,7 @@ public class Main {
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Ingresá un número entero válido.");
+                System.out.println("[!] Ingresa un numero entero valido.");
             }
         }
     }
@@ -475,7 +475,7 @@ public class Main {
             try {
                 return Long.parseLong(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Ingresá un número válido.");
+                System.out.println("[!] Ingresa un numero valido.");
             }
         }
     }
@@ -487,7 +487,7 @@ public class Main {
             try {
                 return Double.parseDouble(scanner.nextLine().trim().replace(",", "."));
             } catch (NumberFormatException e) {
-                System.out.println("⚠ Ingresá un número decimal válido (ej: 19.99).");
+                System.out.println("[!] Ingresa un numero decimal valido (ej: 19.99).");
             }
         }
     }
@@ -500,7 +500,7 @@ public class Main {
             if (!texto.isEmpty()) {
                 return texto;
             }
-            System.out.println("⚠ Este campo es obligatorio, no puede estar vacío.");
+            System.out.println("[!] Este campo es obligatorio, no puede estar vacio.");
         }
     }
 
