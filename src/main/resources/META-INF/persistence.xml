@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence" version="3.0">
+    <persistence-unit name="FoodStorePU" transaction-type="RESOURCE_LOCAL">
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+
+        <!-- Clases del nuevo paquete com.tp.jpa -->
+        <class>com.tp.jpa.model.Base</class>
+        <class>com.tp.jpa.model.Usuario</class>
+        <class>com.tp.jpa.model.Pedido</class>
+        <class>com.tp.jpa.model.Producto</class>
+        <class>com.tp.jpa.model.Categoria</class>
+        <class>com.tp.jpa.model.DetallePedido</class>
+
+        <properties>
+            <!-- Driver de H2 -->
+            <property name="jakarta.persistence.jdbc.driver" value="org.h2.Driver"/>
+
+            <!-- URL: DB_CLOSE_DELAY=-1 mantiene la BD abierta durante la ejecución -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:h2:file:./data/foodstore_db;DB_CLOSE_DELAY=-1"/>
+
+            <property name="jakarta.persistence.jdbc.user" value="sa"/>
+            <property name="jakarta.persistence.jdbc.password" value=""/>
+
+            <!-- 'update' crea las tablas si no existen y actualiza el esquema -->
+            <property name="jakarta.persistence.schema-generation.database.action" value="update"/>
+
+            <!-- Mostramos el SQL en consola para verificar las consultas -->
+            <property name="hibernate.show_sql" value="true"/>
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
