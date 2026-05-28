@@ -25,7 +25,7 @@ public class ProductoRepository extends BaseRepository<Producto> {
      *
      * <p><strong>Consulta JPQL:</strong> Navega desde el objeto Producto a traves de la
      * relacion @ManyToOne hasta el ID de su Categoria usando la notacion de punto (p.categoria.id).
-     * El parametro nombrado :categoriaId evita SQL injection y mejora la legibilidad.
+     * El parametro nombrado:categoriaId evita SQL injection y mejora la legibilidad.
      * TypedQuery&lt;Producto&gt; garantiza type-safety sin necesidad de casteos manuales.</p>
      *
      * @param categoriaId El ID de la categoria por la cual filtrar

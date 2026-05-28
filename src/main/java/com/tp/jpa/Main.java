@@ -96,6 +96,7 @@ public class Main {
 
         String nombre = leerTextoObligatorio("Nombre de la categoria: ");
         System.out.print("Descripcion (opcional, Enter para omitir): ");
+        System.out.flush();
         String descripcion = scanner.nextLine().trim();
 
         Categoria nueva = new Categoria();
@@ -154,12 +155,14 @@ public class Main {
         System.out.println("  Descripcion: " + (categoria.getDescripcion() != null ? categoria.getDescripcion() : "(vacia)"));
 
         System.out.print("Nuevo nombre (Enter para conservar '" + categoria.getNombre() + "'): ");
+        System.out.flush();
         String nuevoNombre = scanner.nextLine().trim();
         if (!nuevoNombre.isEmpty()) {
             categoria.setNombre(nuevoNombre);
         }
 
         System.out.print("Nueva descripcion (Enter para conservar): ");
+        System.out.flush();
         String nuevaDesc = scanner.nextLine().trim();
         if (!nuevaDesc.isEmpty()) {
             categoria.setDescripcion(nuevaDesc);
@@ -252,6 +255,7 @@ public class Main {
         }
 
         System.out.print("Descripcion (opcional, Enter para omitir): ");
+        System.out.flush();
         String descripcion = scanner.nextLine().trim();
 
         int stock = -1;
@@ -323,6 +327,7 @@ public class Main {
 
         // Nombre
         System.out.print("Nuevo nombre (Enter para conservar '" + producto.getNombre() + "'): ");
+        System.out.flush();
         String nuevoNombre = scanner.nextLine().trim();
         if (!nuevoNombre.isEmpty()) {
             producto.setNombre(nuevoNombre);
@@ -330,6 +335,7 @@ public class Main {
 
         // Precio con validación
         System.out.print("Nuevo precio (Enter para conservar $" + producto.getPrecio() + "): ");
+        System.out.flush();
         String precioStr = scanner.nextLine().trim();
         if (!precioStr.isEmpty()) {
             try {
@@ -346,6 +352,7 @@ public class Main {
 
         // Stock con validación
         System.out.print("Nuevo stock (Enter para conservar " + producto.getStock() + "): ");
+        System.out.flush();
         String stockStr = scanner.nextLine().trim();
         if (!stockStr.isEmpty()) {
             try {
@@ -467,6 +474,7 @@ public class Main {
     private static int leerEntero(String mensaje) {
         while (true) {
             System.out.print(mensaje);
+            System.out.flush();
             try {
                 return Integer.parseInt(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
@@ -479,6 +487,7 @@ public class Main {
     private static long leerLong(String mensaje) {
         while (true) {
             System.out.print(mensaje);
+            System.out.flush();
             try {
                 return Long.parseLong(scanner.nextLine().trim());
             } catch (NumberFormatException e) {
@@ -491,6 +500,7 @@ public class Main {
     private static double leerDouble(String mensaje) {
         while (true) {
             System.out.print(mensaje);
+            System.out.flush();
             try {
                 return Double.parseDouble(scanner.nextLine().trim().replace(",", "."));
             } catch (NumberFormatException e) {
@@ -503,6 +513,7 @@ public class Main {
     private static String leerTextoObligatorio(String mensaje) {
         while (true) {
             System.out.print(mensaje);
+            System.out.flush();
             String texto = scanner.nextLine().trim();
             if (!texto.isEmpty()) {
                 return texto;
