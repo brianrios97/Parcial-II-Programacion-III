@@ -14,6 +14,10 @@ application {
     mainClass.set("com.tp.jpa.Main")
 }
 
+tasks.named<JavaExec>("run") {
+    standardInput = System.`in`
+}
+
 repositories {
     mavenCentral()
 }
